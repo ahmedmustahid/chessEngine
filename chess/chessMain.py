@@ -8,7 +8,7 @@ MAX_FPS = 15
 IMAGES = {}
 
 def loadImage():
-    pieces = ["wR", "wN", "wB", "wQ", "wK", "bR", "bN", "bB", "bQ", "bK"]
+    pieces = ["wR", "wN", "wB", "wQ", "wK", "bR", "bN", "bB", "bQ", "bK", "bp", "wp"]
     for piece in pieces:
         IMAGES[piece] = p.transform.scale(p.image.load(f"images/{piece}.png"), (SQ_SIZE, SQ_SIZE))
 
@@ -32,7 +32,6 @@ def main():
         p.display.flip()
 
 def drawBoard(screen):
-    
     for i in range(DIMENSION):
         for j in range(DIMENSION):
             if (i+j)%2==0:
@@ -43,8 +42,14 @@ def drawBoard(screen):
             p.draw.rect(screen,color=p.Color(color), rect=rect)
             
 
-def drawPieces(screen, gs):
-    pass
+def drawPieces(screen, board):
+    for i in range(DIMENSION):
+        for j in range(DIMENSION):
+            piece = board[i][j]
+            if piece!="--":
+                screen.blit(IMAGES[piece],(j* SQ_SIZE , i*SQ_SIZE))
+
+
 
 def drawGameState(screen, gs):
     drawBoard(screen)
