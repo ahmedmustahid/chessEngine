@@ -27,8 +27,29 @@ def main():
         for e in p.event.get():
             if e.type==p.QUIT:
                 running = False
+        drawGameState(screen, gs) 
         clock.tick(MAX_FPS)
         p.display.flip()
+
+def drawBoard(screen):
+    
+    for i in range(DIMENSION):
+        for j in range(DIMENSION):
+            if (i+j)%2==0:
+                color = 'white'
+            else:
+                color = 'grey'
+            rect = p.Rect((i* SQ_SIZE , j*SQ_SIZE), (SQ_SIZE, SQ_SIZE))
+            p.draw.rect(screen,color=p.Color(color), rect=rect)
+            
+
+def drawPieces(screen, gs):
+    pass
+
+def drawGameState(screen, gs):
+    drawBoard(screen)
+
+    drawPieces(screen, gs.board)
 
 if __name__=="__main__":
     main()
