@@ -1,5 +1,5 @@
 import pygame as p
-from chess import chessEngine
+import chessEngine
 
 HEIGHT = WIDTH = 512
 DIMENSION = 8
@@ -11,3 +11,24 @@ def loadImage():
     pieces = ["wR", "wN", "wB", "wQ", "wK", "bR", "bN", "bB", "bQ", "bK"]
     for piece in pieces:
         IMAGES[piece] = p.transform.scale(p.image.load(f"images/{piece}.png"), (SQ_SIZE, SQ_SIZE))
+
+
+def main():
+    p.init()
+    screen = p.display.set_mode((WIDTH, HEIGHT))
+    clock = p.time.Clock()
+    screen.fill(p.Color('white'))
+    gs = chessEngine.GameState()
+
+    loadImage()
+    running = True
+
+    while running:
+        for e in p.event.get():
+            if e.type==p.QUIT:
+                running = False
+        clock.tick(MAX_FPS)
+        p.display.flip()
+
+if __name__=="__main__":
+    main()
