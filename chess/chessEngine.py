@@ -25,6 +25,13 @@ class Move:
         self.startRow = startSq[0]
         self.startCol = startSq[1]
         self.endRow = endSq[0]
+        self.endCol = endSq[1]
 
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.endRow][self.endCol]
+
+    def getChessNotation(self):
+        return self.getRankFile(self.startRow, self.startCol)+self.getRankFile(self.endRow, self.endCol)
+
+    def getRankFile(self, row, col):
+        return self.colsToFiles[col]+self.rowsToRanks[row]

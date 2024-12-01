@@ -23,6 +23,8 @@ def main():
     loadImage()
     running = True
 
+    sqSelected = ()#(row, col);last user click
+    playerClicks = []#keep track of player clicks: two tuples
     while running:
         for e in p.event.get():
             if e.type==p.QUIT:
@@ -31,6 +33,12 @@ def main():
                 location = p.mouse.get_pos()#(x,y) location of mouse
                 col = location[0]//SQ_SIZE
                 row = location[1]//SQ_SIZE
+                if sqSelected==(row,col):
+                    sqSelected = () #unselect if selection same as previous selection
+                    playerClicks = []
+                sqSelected = (row, col)
+                playerClicks.append(sqSelected)
+
         drawGameState(screen, gs) 
         clock.tick(MAX_FPS)
         p.display.flip()
