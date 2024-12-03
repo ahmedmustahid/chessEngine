@@ -40,9 +40,10 @@ def main():
                 playerClicks.append(sqSelected)
 
                 if len(playerClicks)==2:
-                    move = chessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
-                    print(move.getChessNotation())
-                    gs.makeMove(move)
+                    if gs.board[playerClicks[0][0]][playerClicks[0][1]]!="--":
+                        move = chessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
+                        print(move.getChessNotation())
+                        gs.makeMove(move)
                     sqSelected = ()
                     playerClicks = []
 
