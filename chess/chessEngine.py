@@ -78,19 +78,27 @@ class GameState:
                 turn = self.board[r][c][0]
                 if (turn =='w' and self.whiteToMove) or (turn == 'b' and not self.whiteToMove):
                     piece = self.board[r][c][1]
-                    if piece=='q':
+                    if piece=='p':
                         self.getPawnMoves(r, c, moves)
+                        print(f"moves {moves}")
                     if piece=='R':
                         self.getRookMoves(r, c, moves)
         return moves
     
     def getPawnMoves(self, r, c, moves):
-        print(f"{r}, {c}, {moves}")
         if self.whiteToMove: #white pawns
             if self.board[r-1][c]=="--":
-                if r==6:
-                    moves.append(Move((r,c),(r-2,c),self.board))
-                    return moves
-    
+                moves.append(Move((r,c), (r-1,c), self.board)) 
+                if r==6 and self.board[r-2][c]=="--":
+                    moves.append(Move((r,c), (r-2,c), self.board))
+            
+            if c - 1 >= 0: #left black
+                if self.board[r-1][c-1][0]=="b":
+                    moves.append(Move((r,c), (r-1, c-1), self.board))
+            if c + 1 <= 7:
+                if self.board[r-1][c+1][0]=="b":
+                    moves.append(Move((r,c), (r-1, c+1), self.board))
+
+        
     def getRookMoves(self, r, c, moves):
         pass
