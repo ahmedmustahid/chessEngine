@@ -22,6 +22,8 @@ def main():
 
     loadImage()
     running = True
+    validMoves = gs.getValidMoves()
+    moveState = False#flag variable to call move only when needed and not at every frame
 
     sqSelected = ()#(row, col);last user click
     playerClicks = []#keep track of player clicks: two tuples
@@ -33,20 +35,30 @@ def main():
                 location = p.mouse.get_pos()#(x,y) location of mouse
                 col = location[0]//SQ_SIZE
                 row = location[1]//SQ_SIZE
-                if sqSelected==(row,col):
+                if sqSelected==(row,col):#user selects the same square twice
                     sqSelected = () #unselect if selection same as previous selection
                     playerClicks = []
-                sqSelected = (row, col)
-                playerClicks.append(sqSelected)
+                else:
+                    sqSelected = (row, col)
+                    playerClicks.append(sqSelected)#append for 1st and 2nd clicks
 
                 if len(playerClicks)==2:
                     if gs.board[playerClicks[0][0]][playerClicks[0][1]]!="--":
                         move = chessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
-                        print(move.getChessNotation())
-                        gs.makeMove(move)
+                        # print(move.getChessNotation())
+                        print(move)
+                        if move in validMoves:
+                            gs.makeMove(move)
+                            moveState = True
                     sqSelected = ()
                     playerClicks = []
-
+            elif e.type == p.KEYDOWN:
+                if e.key == p.K_z:
+                    gs.undoMove()
+                    moveState = True
+        if moveState: #generate new set of validmoves once a validmoves has been made
+            validMoves = gs.getValidMoves()
+            moveState = False
         drawGameState(screen, gs) 
         clock.tick(MAX_FPS)
         p.display.flip()

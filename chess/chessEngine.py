@@ -15,7 +15,17 @@ class Move:
 
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.endRow][self.endCol]
-    
+        self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol
+        print(self.moveID)
+
+    def __eq__(self, other):
+        if isinstance(other, Move):
+            return self.moveID == other.moveID
+        return False
+
+    def __repr__(self):
+        return self.getChessNotation()
+
     def getChessNotation(self):
         return self.getRankFile(self.startRow, self.startCol)+self.getRankFile(self.endRow, self.endCol)
 
@@ -50,3 +60,37 @@ class GameState:
             move = self.movelog.pop()
             self.board[move.endRow][move.endCol], self.board[move.startRow][move.startCol] = move.pieceCaptured, move.pieceMoved
             self.whiteToMove = not self.whiteToMove
+
+    '''
+    All moves considering checks
+    '''
+    def getValidMoves(self):
+        return self.getAllPossibleMoves()
+
+
+    '''
+    All moves without considering checks
+    '''
+    def getAllPossibleMoves(self):
+        moves = []
+        for r in range(len(self.board)):
+            for c in range(len(self.board[r])):
+                turn = self.board[r][c][0]
+                if (turn =='w' and self.whiteToMove) or (turn == 'b' and not self.whiteToMove):
+                    piece = self.board[r][c][1]
+                    if piece=='q':
+                        self.getPawnMoves(r, c, moves)
+                    if piece=='R':
+                        self.getRookMoves(r, c, moves)
+        return moves
+    
+    def getPawnMoves(self, r, c, moves):
+        print(f"{r}, {c}, {moves}")
+        if self.whiteToMove: #white pawns
+            if self.board[r-1][c]=="--":
+                if r==6:
+                    moves.append(Move((r,c),(r-2,c),self.board))
+                    return moves
+    
+    def getRookMoves(self, r, c, moves):
+        pass
