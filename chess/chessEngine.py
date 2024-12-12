@@ -173,33 +173,34 @@ class GameState:
         elif board[r2][c2][0]==color:
             moves.add(Move((r1,c1), (r2, c2), board))
 
+    def getKnightMovesSingleColor(self, r, c, moves, color):
+        if r - 2 >=0:
+            if c + 1 <= 7:
+                GameState.knightMoveBoard(r, c, r -2, c + 1,moves,self.board, color)
+            if c - 1 >= 0:
+                GameState.knightMoveBoard(r, c, r -2, c - 1,moves,self.board, color)
+        if r + 2 <=7:
+            if c + 1 <= 7:
+                GameState.knightMoveBoard(r, c, r +2, c + 1,moves,self.board, color)
+                
+            if c - 1 >= 0:
+                GameState.knightMoveBoard(r, c, r +2, c - 1,moves,self.board, color)
+        if c - 2 >=0:
+            if r + 1 <= 7:
+                GameState.knightMoveBoard(r, c, r + 1, c - 2,moves,self.board, color)
+            if r - 1 >= 0:
+                GameState.knightMoveBoard(r, c, r - 1, c - 2,moves,self.board, color)
+        if c + 2 <=7:
+            if r + 1 <= 7:
+                GameState.knightMoveBoard(r, c, r + 1, c + 2,moves,self.board, color)
+            if r - 1 >= 0:
+                GameState.knightMoveBoard(r, c, r - 1, c + 2,moves,self.board, color)
 
     def getKnightMoves(self, r, c, moves):
         if self.whiteToMove:
-            if r - 2 >=0:
-                if c + 1 <= 7:
-                    GameState.knightMoveBoard(r, c, r -2, c + 1,moves,self.board, "b")
-                if c - 1 >= 0:
-                    GameState.knightMoveBoard(r, c, r -2, c - 1,moves,self.board, "b")
-            if r + 2 <=7:
-                if c + 1 <= 7:
-                    GameState.knightMoveBoard(r, c, r +2, c + 1,moves,self.board, "b")
-                    
-                if c - 1 >= 0:
-                    GameState.knightMoveBoard(r, c, r +2, c - 1,moves,self.board, "b")
-                    
-            if c - 2 >=0:
-                if r + 1 <= 7:
-                    GameState.knightMoveBoard(r, c, r + 1, c - 2,moves,self.board, "b")
-                    
-                if r - 1 >= 0:
-                    GameState.knightMoveBoard(r, c, r - 1, c - 2,moves,self.board, "b")
-                    
-            if c + 2 <=7:
-                if r + 1 <= 7:
-                    GameState.knightMoveBoard(r, c, r + 1, c + 2,moves,self.board, "b")
-                if r - 1 >= 0:
-                    GameState.knightMoveBoard(r, c, r - 1, c + 2,moves,self.board, "b")
+            self.getKnightMovesSingleColor(r, c, moves, "b")
+        else:
+            self.getKnightMovesSingleColor(r, c, moves, "w")
                     
 
             
