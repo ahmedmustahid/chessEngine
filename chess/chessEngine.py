@@ -23,6 +23,9 @@ class Move:
             return self.moveID == other.moveID
         return False
 
+    def __hash__(self):
+        return hash(self.moveID)
+
     def __repr__(self):
         return self.getChessNotation()
 
@@ -45,7 +48,9 @@ class GameState:
             ["wp", "wp","wp","wp","wp","wp","wp","wp",],
             ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
         ]
-
+        self.movefunctions = {"p": self.getPawnMoves,"R":self.getRookMoves,
+                                "N":self.getKnightMoves, "B":self.getBishopMoves,
+                                "Q":self.getQueenMoves, "K":self.getKingMoves}
         self.whiteToMove = True
         self.movelog = []
 
@@ -72,46 +77,93 @@ class GameState:
     All moves without considering checks
     '''
     def getAllPossibleMoves(self):
-        moves = []
+        moves = set()
         for r in range(len(self.board)):
             for c in range(len(self.board[r])):
                 turn = self.board[r][c][0]
                 if (turn =='w' and self.whiteToMove) or (turn == 'b' and not self.whiteToMove):
                     piece = self.board[r][c][1]
-                    if piece=='p':
-                        self.getPawnMoves(r, c, moves)
-                        print(f"moves {moves}")
-                    if piece=='R':
-                        self.getRookMoves(r, c, moves)
+                    self.movefunctions[piece](r, c, moves)
         return moves
     
     def getPawnMoves(self, r, c, moves):
         if self.whiteToMove: #white pawns
             if self.board[r-1][c]=="--":
-                moves.append(Move((r,c), (r-1,c), self.board)) 
+                moves.add(Move((r,c), (r-1,c), self.board)) 
                 if r==6 and self.board[r-2][c]=="--":
-                    moves.append(Move((r,c), (r-2,c), self.board))
+                    moves.add(Move((r,c), (r-2,c), self.board))
             
             if c - 1 >= 0: #left black
                 if self.board[r-1][c-1][0]=="b":
-                    moves.append(Move((r,c), (r-1, c-1), self.board))
+                    moves.add(Move((r,c), (r-1, c-1), self.board))
             if c + 1 <= 7:
                 if self.board[r-1][c+1][0]=="b":
-                    moves.append(Move((r,c), (r-1, c+1), self.board))
+                    moves.add(Move((r,c), (r-1, c+1), self.board))
         
         else:
             if self.board[r+1][c]=="--":
-                moves.append(Move((r,c), (r+1, c), self.board))
+                moves.add(Move((r,c), (r+1, c), self.board))
                 if r==1 and self.board[r+2][c]=="--":
-                    moves.append(Move((r,c), (r+2, c), self.board))
+                    moves.add(Move((r,c), (r+2, c), self.board))
             if c - 1 >=0:
                 if self.board[r+1][c-1][0]=="w":
-                    moves.append(Move((r,c),(r+1, c-1), self.board))
+                    moves.add(Move((r,c),(r+1, c-1), self.board))
             if c + 1 <= 7:
                 if self.board[r+1][c+1][0]=="w":
-                    moves.append(Move((r,c),(r+1, c+1), self.board))
+                    moves.add(Move((r,c),(r+1, c+1), self.board))
 
 
         
     def getRookMoves(self, r, c, moves):
+        if self.whiteToMove: #white rooks
+            tempR = r
+            if r - 1 >=0:
+                while self.board[r-1][c]=="--":
+                    m = Move((tempR,c), (r-1,c), self.board)
+                    moves.add(m)
+                    r = r -1 
+                    if r - 1< 0:
+                        break
+            r = tempR
+            if r + 1 <= 7: 
+                while self.board[r+1][c]=="--":
+                    m = Move((tempR,c), (r+1,c), self.board)
+                    moves.add(m)
+                    r = r +1 
+                    if r+ 1 > 7:
+                        break
+            r = tempR
+            tempC = c
+            if c - 1 >= 0:
+                while self.board[r][c-1]=="--":
+                    moves.add(Move((r,tempC),(r,c-1), self.board))
+                    c = c - 1
+                    if c - 1 < 0:
+                        break
+            c = tempC
+            if c + 1 <= 7:
+                print(f"r,c+1 {(r,c+1)}")
+                while self.board[r][c+1]=="--":
+                    moves.add(Move((r,tempC),(r,c+1), self.board))
+                    c = c + 1
+                    if c + 1 > 7:
+                        break
+ 
+            
+
+
+
+    def getKnightMoves(self, r, c, moves):
+        pass
+
+
+    def getBishopMoves(self, r, c, moves):
+        pass
+
+
+    def getQueenMoves(self, r, c, moves):
+        pass
+
+
+    def getKingMoves(self, r, c, moves):
         pass
