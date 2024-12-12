@@ -124,6 +124,10 @@ class GameState:
                     r = r -1 
                     if r - 1< 0:
                         break
+                
+            if r - 1 >=0:
+                if self.board[r-1][c][0]=="b":
+                    moves.add(Move((tempR,c), (r-1,c), self.board))
             r = tempR
             if r + 1 <= 7: 
                 while self.board[r+1][c]=="--":
@@ -132,6 +136,9 @@ class GameState:
                     r = r +1 
                     if r+ 1 > 7:
                         break
+            if r + 1 <= 7: 
+                if self.board[r+1][c][0]=="b":
+                    moves.add(Move((tempR,c), (r+1,c), self.board))
             r = tempR
             tempC = c
             if c - 1 >= 0:
@@ -140,6 +147,9 @@ class GameState:
                     c = c - 1
                     if c - 1 < 0:
                         break
+            if c - 1 >= 0:
+                if self.board[r][c-1][0]=="b":
+                    moves.add(Move((tempR,c), (r,c-1), self.board))
             c = tempC
             if c + 1 <= 7:
                 print(f"r,c+1 {(r,c+1)}")
@@ -148,6 +158,58 @@ class GameState:
                     c = c + 1
                     if c + 1 > 7:
                         break
+            if c + 1 <= 7:
+                if self.board[r][c+1][0]=="b":
+                    moves.add(Move((tempR,c), (r,c+1), self.board))
+            
+        else:
+            #black rooks
+            tempR = r
+            if r - 1 >=0:
+                while self.board[r-1][c]=="--":
+                    m = Move((tempR,c), (r-1,c), self.board)
+                    moves.add(m)
+                    r = r -1 
+                    if r - 1< 0:
+                        break
+                    
+            if r - 1 >=0:
+                if self.board[r-1][c][0]=="w":
+                    moves.add(Move((tempR,c), (r-1,c), self.board))
+            r = tempR
+            if r + 1 <= 7: 
+                while self.board[r+1][c]=="--":
+                    m = Move((tempR,c), (r+1,c), self.board)
+                    moves.add(m)
+                    r = r +1 
+                    if r+ 1 > 7:
+                        break
+            if r + 1 <= 7: 
+                if self.board[r+1][c][0]=="w":
+                    moves.add(Move((tempR,c), (r+1,c), self.board))
+            r = tempR
+            tempC = c
+            if c - 1 >= 0:
+                while self.board[r][c-1]=="--":
+                    moves.add(Move((r,tempC),(r,c-1), self.board))
+                    c = c - 1
+                    if c - 1 < 0:
+                        break
+            if c - 1 >= 0:
+                if self.board[r][c-1][0]=="w":
+                    moves.add(Move((tempR,c), (r,c-1), self.board))
+            c = tempC
+            if c + 1 <= 7:
+                print(f"r,c+1 {(r,c+1)}")
+                while self.board[r][c+1]=="--":
+                    moves.add(Move((r,tempC),(r,c+1), self.board))
+                    c = c + 1
+                    if c + 1 > 7:
+                        break
+            if c + 1 <= 7:
+                if self.board[r][c+1][0]=="w":
+                    moves.add(Move((tempR,c), (r,c+1), self.board))
+ 
  
             
 
