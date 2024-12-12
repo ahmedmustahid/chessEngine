@@ -207,7 +207,6 @@ class GameState:
         if r-i>=0 and c+i<=7:
             while self.board[r-i][c+i]=="--":
                 moves.add(Move((r,c), (r-i, c+i), self.board))
-                print(f"appending3 {(r-i, c+i)}")
                 i += 1
                 if r-i<0 or c+i>7:
                     break
@@ -219,7 +218,6 @@ class GameState:
         if c-i>=0 and r+i<=7:
             while self.board[r+i][c-i]=="--":
                 moves.add(Move((r,c), (r+i, c-i), self.board))
-                print(f"appending4 {(r+i, c-i)}")
                 i += 1
                 if c-i<0 or r+i>7:
                     break
@@ -231,7 +229,6 @@ class GameState:
         if c-i>=0 and r-i>=0:
             while self.board[r-i][c-i]=="--":
                 moves.add(Move((r,c), (r-i, c-i), self.board))
-                print(f"appending5 {(r-i, c-i)}")
                 i += 1
                 if c-i<0 or r-i<0:
                     break
@@ -242,8 +239,6 @@ class GameState:
         if c+i<=7 and r+i<=7:
             while self.board[r+i][c+i]=="--":
                 moves.add(Move((r,c), (r+i, c+i), self.board))
-                print(f"appending6 {(r+i, c+i)}")
-                print(f"r,c,i {(r,c),i}")
                 i += 1
                 if c+i>7 or r+i>7:
                     break
@@ -260,7 +255,8 @@ class GameState:
 
 
     def getQueenMoves(self, r, c, moves):
-        pass
+        self.getBishopMoves(r, c, moves)
+        self.getRookMoves(r,c,moves)
 
 
     def getKingMoves(self, r, c, moves):
