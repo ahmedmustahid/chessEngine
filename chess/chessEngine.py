@@ -201,10 +201,62 @@ class GameState:
             self.getKnightMovesSingleColor(r, c, moves, "b")
         else:
             self.getKnightMovesSingleColor(r, c, moves, "w")
-                    
+
+    def bishopMoveBoard(self, r, c, moves, color):
+        i = 1
+        if r-i>=0 and c+i<=7:
+            while self.board[r-i][c+i]=="--":
+                moves.add(Move((r,c), (r-i, c+i), self.board))
+                print(f"appending3 {(r-i, c+i)}")
+                i += 1
+                if r-i<0 or c+i>7:
+                    break
+        if r-i>=0 and c+i<=7:
+            if self.board[r-i][c+i][0]==color:
+                moves.add(Move((r,c), (r-i, c+i), self.board))
+            
+        i = 1
+        if c-i>=0 and r+i<=7:
+            while self.board[r+i][c-i]=="--":
+                moves.add(Move((r,c), (r+i, c-i), self.board))
+                print(f"appending4 {(r+i, c-i)}")
+                i += 1
+                if c-i<0 or r+i>7:
+                    break
+        if c-i>=0 and r+i<=7:
+            if self.board[r+i][c-i][0]==color:
+                moves.add(Move((r,c), (r+i, c-i), self.board))
+            
+        i = 1
+        if c-i>=0 and r-i>=0:
+            while self.board[r-i][c-i]=="--":
+                moves.add(Move((r,c), (r-i, c-i), self.board))
+                print(f"appending5 {(r-i, c-i)}")
+                i += 1
+                if c-i<0 or r-i<0:
+                    break
+        if c-i>=0 and r-i>=0:
+            if self.board[r-i][c-i][0]==color:
+                moves.add(Move((r,c), (r-i, c-i), self.board))
+        i = 1
+        if c+i<=7 and r+i<=7:
+            while self.board[r+i][c+i]=="--":
+                moves.add(Move((r,c), (r+i, c+i), self.board))
+                print(f"appending6 {(r+i, c+i)}")
+                print(f"r,c,i {(r,c),i}")
+                i += 1
+                if c+i>7 or r+i>7:
+                    break
+        if c+i<=7 and r+i<=7:
+            if self.board[r+i][c+i][0]==color:
+                moves.add(Move((r,c), (r+i, c+i), self.board))
+
 
     def getBishopMoves(self, r, c, moves):
-        pass
+        if self.whiteToMove:
+            self.bishopMoveBoard(r, c, moves,"b")
+        else:
+            self.bishopMoveBoard(r, c, moves,"w")
 
 
     def getQueenMoves(self, r, c, moves):
