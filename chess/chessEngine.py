@@ -203,9 +203,6 @@ class GameState:
             self.getKnightMovesSingleColor(r, c, moves, "w")
                     
 
-            
-
-
     def getBishopMoves(self, r, c, moves):
         pass
 
