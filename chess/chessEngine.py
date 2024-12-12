@@ -258,6 +258,30 @@ class GameState:
         self.getBishopMoves(r, c, moves)
         self.getRookMoves(r,c,moves)
 
+    def kingMoveBoard(self, r1, c1, r2, c2, moves, color):
+        if self.board[r2][c2]=="--":
+            moves.add(Move((r1,c1),(r2, c2), self.board))
+        if self.board[r2][c2][0]==color:
+            moves.add(Move((r1,c1),(r2, c2), self.board))
+
+
+    def kingMoveBoardSingleColor(self, r, c, moves, color):
+        if r+1<=7:
+            self.kingMoveBoard(r, c, r+1, c, moves, color)
+            if c+1<=7:
+                self.kingMoveBoard(r, c, r+1, c+1, moves, color)
+            if c-1>=0:
+                self.kingMoveBoard(r, c, r+1, c-1, moves, color)
+        if r-1>=0:
+            self.kingMoveBoard(r, c, r-1, c, moves, color)
+            if c+1<=7:
+                self.kingMoveBoard(r, c, r-1, c+1, moves, color)
+            if c-1>=0:
+                self.kingMoveBoard(r, c, r-1, c-1, moves, color)
+
 
     def getKingMoves(self, r, c, moves):
-        pass
+        if self.whiteToMove:
+            self.kingMoveBoardSingleColor(r, c, moves, "b")
+        else:
+            self.kingMoveBoardSingleColor(r, c, moves, "w")
