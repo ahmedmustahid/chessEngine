@@ -142,51 +142,6 @@ class GameState:
                     moves.add(Move((r,c), (r2,c2), self.board))
 
 
-    def bishopMoveBoard(self, r, c, moves, color):
-        i = 1
-        if r-i>=0 and c+i<=7:
-            while self.board[r-i][c+i]=="--":
-                moves.add(Move((r,c), (r-i, c+i), self.board))
-                i += 1
-                if r-i<0 or c+i>7:
-                    break
-        if r-i>=0 and c+i<=7:
-            if self.board[r-i][c+i][0]==color:
-                moves.add(Move((r,c), (r-i, c+i), self.board))
-            
-        i = 1
-        if c-i>=0 and r+i<=7:
-            while self.board[r+i][c-i]=="--":
-                moves.add(Move((r,c), (r+i, c-i), self.board))
-                i += 1
-                if c-i<0 or r+i>7:
-                    break
-        if c-i>=0 and r+i<=7:
-            if self.board[r+i][c-i][0]==color:
-                moves.add(Move((r,c), (r+i, c-i), self.board))
-            
-        i = 1
-        if c-i>=0 and r-i>=0:
-            while self.board[r-i][c-i]=="--":
-                moves.add(Move((r,c), (r-i, c-i), self.board))
-                i += 1
-                if c-i<0 or r-i<0:
-                    break
-        if c-i>=0 and r-i>=0:
-            if self.board[r-i][c-i][0]==color:
-                moves.add(Move((r,c), (r-i, c-i), self.board))
-        i = 1
-        if c+i<=7 and r+i<=7:
-            while self.board[r+i][c+i]=="--":
-                moves.add(Move((r,c), (r+i, c+i), self.board))
-                i += 1
-                if c+i>7 or r+i>7:
-                    break
-        if c+i<=7 and r+i<=7:
-            if self.board[r+i][c+i][0]==color:
-                moves.add(Move((r,c), (r+i, c+i), self.board))
-
-
     def getBishopMoves(self, r, c, moves):
         directions = [(1,1),(1,-1),(-1,-1),(-1,1)]
         enemycolor = "b" if self.whiteToMove else "w"
@@ -202,8 +157,6 @@ class GameState:
                         break
                 else:
                     break
-
-
 
 
     def getQueenMoves(self, r, c, moves):
@@ -233,7 +186,12 @@ class GameState:
 
 
     def getKingMoves(self, r, c, moves):
-        if self.whiteToMove:
-            self.kingMoveBoardSingleColor(r, c, moves, "b")
-        else:
-            self.kingMoveBoardSingleColor(r, c, moves, "w")
+        directions = [(1,1),(1,-1),(-1,-1),(-1,1)]
+        directions += [(1,0),(-1,0),(0,1),(0,-1)]#up, down, right, left
+        nonenemycolor = "w" if self.whiteToMove else "b"
+        for d in directions:
+            r2 = r + d[0]
+            c2 = c + d[1]
+            if 0<= r2 < 8 and 0<= c2 < 8:
+                if self.board[r2][c2][0]!=nonenemycolor:
+                    moves.add(Move((r,c), (r2, c2), self.board))
