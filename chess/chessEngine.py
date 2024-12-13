@@ -112,59 +112,24 @@ class GameState:
                 if self.board[r+1][c+1][0]=="w":
                     moves.add(Move((r,c),(r+1, c+1), self.board))
 
-    @staticmethod
-    def getRookMovesOneColor(r, c, moves, board, color):
-        tempR = r
-        if r - 1 >=0:
-            while board[r-1][c]=="--":
-                m = Move((tempR,c), (r-1,c), board)
-                moves.add(m)
-                r = r -1 
-                if r - 1< 0:
-                    break
-        if r - 1 >=0:
-            if board[r-1][c][0]==color:
-                moves.add(Move((tempR,c), (r-1,c), board))
-        r = tempR
-        if r + 1 <= 7: 
-            while board[r+1][c]=="--":
-                m = Move((tempR,c), (r+1,c), board)
-                moves.add(m)
-                r = r +1 
-                if r+ 1 > 7:
-                    break
-        if r + 1 <= 7: 
-            if board[r+1][c][0]==color:
-                moves.add(Move((tempR,c), (r+1,c), board))
-        r = tempR
-        tempC = c
-        if c - 1 >= 0:
-            while board[r][c-1]=="--":
-                moves.add(Move((r,tempC),(r,c-1), board))
-                c = c - 1
-                if c - 1 < 0:
-                    break
-        if c - 1 >= 0:
-            if board[r][c-1][0]==color:
-                moves.add(Move((tempR,c), (r,c-1), board))
-        c = tempC
-        if c + 1 <= 7:
-            print(f"r,c+1 {(r,c+1)}")
-            while board[r][c+1]=="--":
-                moves.add(Move((r,tempC),(r,c+1), board))
-                c = c + 1
-                if c + 1 > 7:
-                    break
-        if c + 1 <= 7:
-            if board[r][c+1][0]==color:
-                moves.add(Move((tempR,c), (r,c+1), board))
- 
-        
     def getRookMoves(self, r, c, moves):
-        if self.whiteToMove: #white rooks
-            GameState.getRookMovesOneColor(r, c, moves, self.board, "b")
-        else: #black rooks
-            GameState.getRookMovesOneColor(r, c, moves, self.board, "w")
+        directions = [(1,0),(-1,0),(0,1),(0,-1)]#up, down, right, left
+        enemycolor = "b" if self.whiteToMove else "w"
+        for direction in directions:
+            for i in range(1, 8):
+                r2 = r + direction[0] * i
+                c2 = c + direction[1] * i
+                if 0 <= r2 < 8 and 0 <= c2 < 8:
+                    if self.board[r2][c2]=="--":
+                        moves.add(Move((r, c), (r2, c2), self.board))
+                    elif self.board[r2][c2][0]==enemycolor:
+                        moves.add(Move((r, c), (r2, c2), self.board))
+                        break
+                    else:
+                        break
+                else:
+                    break
+
 
     @staticmethod
     def knightMoveBoard(r1, c1, r2, c2, moves, board, color):
