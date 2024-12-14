@@ -39,14 +39,14 @@ class Move:
 class GameState:
     def __init__(self):
         self.board = [
-            ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
-            ["bp","bp","bp","bp","bp","bp","bp","bp",],
-            ["--","--","--","--","--","--","--","--",],
-            ["--","--","--","--","--","--","--","--",],
-            ["--","--","--","--","--","--","--","--",],
-            ["--","--","--","--","--","--","--","--",],
-            ["wp", "wp","wp","wp","wp","wp","wp","wp",],
-            ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"]
+            ["bR",  "bN",   "bB",   "bQ",   "bK",   "bB",   "bN",   "bR"],
+            ["bp",  "bp",   "bp",   "bp",   "bp",   "bp",   "bp",   "bp",],
+            ["--",  "--",   "--",   "--",   "--",   "--",   "--",   "--",],
+            ["--",  "--",   "--",   "--",   "--",   "--",   "--",   "--",],
+            ["--",  "--",   "--",   "--",   "--",   "--",   "--",   "--",],
+            ["--",  "--",   "--",   "--",   "--",   "--",   "--",   "--",],
+            ["wp",  "wp",   "wp",   "wp",   "wp",   "wp",   "wp",   "wp",],
+            ["wR",  "wN",   "wB",   "wQ",   "wK",   "wB",   "wN",   "wR"]
         ]
         self.movefunctions = {"p": self.getPawnMoves,"R":self.getRookMoves,
                                 "N":self.getKnightMoves, "B":self.getBishopMoves,
@@ -54,25 +54,78 @@ class GameState:
         self.whiteToMove = True
         self.movelog = []
 
+        self.whiteKingLocation = (7,4)
+        self.blackKingLocation = (0,4)
+
+        self.checkmate = False
+        self.stalemate = False
+
     def makeMove(self, move: Move):
         self.board[move.startRow][move.startCol] = "--"
         self.board[move.endRow][move.endCol] = move.pieceMoved
         self.movelog.append(move)
         self.whiteToMove = not self.whiteToMove
 
+        if move.pieceMoved=="wK":
+            self.whiteKingLocation = (move.endRow, move.endCol)
+        elif move.pieceMoved=="bK":
+            self.blackKingLocation = (move.endRow, move.endCol)
+
     def undoMove(self):
         if len(self.movelog)!=0:
             move = self.movelog.pop()
             self.board[move.endRow][move.endCol], self.board[move.startRow][move.startCol] = move.pieceCaptured, move.pieceMoved
             self.whiteToMove = not self.whiteToMove
+            if move.pieceMoved=="wK":
+                self.whiteKingLocation = (move.startRow, move.startCol)
+            elif move.pieceMoved=="bK":
+                self.blackKingLocation = (move.startRow, move.startCol)
+
+
 
     '''
     All moves considering checks
     '''
     def getValidMoves(self):
-        return self.getAllPossibleMoves()
+        '''
+        1. generate all possible moves
+        2. for each move, make the move
+        3. generate all opposing moves
+        4. for each of the opponent's moves check if they attack the king
+        5. if they attack the king, it's not a valid move 
+        '''
+        moves = self.getAllPossibleMoves() #1
+        for move in moves:
+            self.makeMove(move) #2
+            self.whiteToMove = not self.whiteToMove #makemove changes sign
+            if self.inCheck():
+                moves.pop(move)#5
+            self.whiteToMove = not self.whiteToMove
+            self.undoMove()
+        if len(moves)==0:
+            if self.inCheck():
+                self.checkmate = True
+            else:
+                self.stalemate = True
+        else:
+            self.checkmate = False
+            self.stalemate = False
+        return moves
 
+    def inCheck(self):
+        if self.whiteToMove:
+            return self.squareUnderAttack(self.whiteKingLocation[0], self.whiteKingLocation[1])
+        else:
+            return self.squareUnderAttack(self.blackKingLocation[0], self.blackKingLocation[1])
 
+    def squareUnderAttack(self, r, c):
+        self.whiteToMove = not self.whiteToMove #switch to opponent's turn
+        oppMoves = self.getAllPossibleMoves() #3
+        self.whiteToMove = not self.whiteToMove
+        for move in oppMoves:
+            if move.endRow==r and move.endCol==c:
+                return True
+        return False 
     '''
     All moves without considering checks
     '''
