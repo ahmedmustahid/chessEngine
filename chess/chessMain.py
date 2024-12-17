@@ -45,11 +45,13 @@ def main():
                 if len(playerClicks)==2:
                     if gs.board[playerClicks[0][0]][playerClicks[0][1]]!="--":
                         move = chessEngine.Move(playerClicks[0], playerClicks[1], gs.board)
-                        print(move.getChessNotation())
+                        print(f"moving {move.getChessNotation()}")
+                        print(f"player clicks before {playerClicks}")
                         # print(move)
-                        print(f"validMoves {validMoves}")
-                        print(f"movestate {moveState}")
+                        # print(f"validMoves {validMoves}")
+                        # print(f"movestate {moveState}")
                         if move in validMoves:
+                            print(f"player clicks after {playerClicks}")
                             gs.makeMove(move)
                             moveState = True
                             sqSelected = ()
@@ -62,7 +64,7 @@ def main():
                     moveState = True
         if moveState: #generate new set of validmoves once a validmoves has been made
             validMoves = gs.getValidMoves()
-            print(f"validMoves2 {validMoves}")
+            # print(f"validMoves2 {validMoves}")
             moveState = False
         drawGameState(screen, gs) 
         clock.tick(MAX_FPS)

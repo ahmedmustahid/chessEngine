@@ -16,7 +16,7 @@ class Move:
         self.pieceMoved = board[self.startRow][self.startCol]
         self.pieceCaptured = board[self.endRow][self.endCol]
         self.moveID = self.startRow * 1000 + self.startCol * 100 + self.endRow * 10 + self.endCol
-        print(self.moveID)
+        # print(self.moveID)
 
     def __eq__(self, other):
         if isinstance(other, Move):
@@ -95,13 +95,17 @@ class GameState:
         5. if they attack the king, it's not a valid move 
         '''
         moves = self.getAllPossibleMoves() #1
+        # moves2 = moves.copy()
+        moves2 = []
         for move in moves:
             self.makeMove(move) #2
             self.whiteToMove = not self.whiteToMove #makemove changes sign
             if self.inCheck():
-                moves.pop(move)#5
+                moves2.append(move)#5
             self.whiteToMove = not self.whiteToMove
             self.undoMove()
+        for move in moves2:
+            moves.remove(move)
         if len(moves)==0:
             if self.inCheck():
                 self.checkmate = True
