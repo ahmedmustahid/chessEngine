@@ -57,7 +57,7 @@ def main():
                             sqSelected = ()
                             playerClicks = []
                         else:
-                            playerClicks = [sqSelected]
+                            playerClicks = []
             elif e.type == p.KEYDOWN:
                 if e.key == p.K_z:
                     gs.undoMove()
